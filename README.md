@@ -6,7 +6,10 @@ Data source: the public Forex Factory weekly calendar feed (`nfs.faireconomy.med
 
 ## One-time setup (about 5 minutes)
 
-1. **Create the repo**: on github.com click **New repository**, name it `it-economic-calendar`, set it to **Private**, and tick **Add a README**.
+> Already done for this repo. Kept here in case you ever need to rebuild it.
+> This repo is **public** so GitHub Actions runs free. The webhook URL is never in the code; it lives only in the `DISCORD_WEBHOOK_URL` secret, which nobody else can see.
+
+1. **Create the repo**: on github.com click **New repository**, name it `it-economic-calendar`, and tick **Add a README**.
 2. **Add the script**: in the repo click **Add file → Upload files** and drag in `post_calendar.py`.
 3. **Add the schedule**: click **Add file → Create new file**. For the file name type exactly
    `.github/workflows/daily-calendar.yml`
