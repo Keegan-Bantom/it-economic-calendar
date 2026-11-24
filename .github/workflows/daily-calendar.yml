@@ -6,6 +6,10 @@ on:
     - cron: "10 22 * * *"
   workflow_dispatch: {}   # lets you run it manually from the Actions tab
 
+permissions:
+  contents: read
+  actions: write   # only used by the keep-alive step below
+
 jobs:
   post:
     runs-on: ubuntu-latest
@@ -20,3 +24,14 @@ jobs:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           TZ_NAME: Africa/Johannesburg
         run: python post_calendar.py
+
+      # GitHub pauses scheduled workflows in public repos after 60 days with no
+      # activity. Re-enabling the workflow once a month keeps the schedule alive.
+      - name: Keep schedule alive (1st of each month)
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$(TZ=Africa/Johannesburg date +%d)" = "01" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            gh api -X PUT "repos/${{ github.repository }}/actions/workflows/daily-calendar.yml/enable" && echo "Keep-alive done"
+          fi
